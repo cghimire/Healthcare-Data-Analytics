@@ -1,0 +1,222 @@
+---
+title: "IT599E Research Project"
+author: "Chiranjibi Ghimire"
+date: "5/03/2019"
+output:
+  word_document: default
+  pdf_document: default
+---
+
+## Data Description and Introduction
+
+This data set is derived from the Vermont Uniform Hospital Discharge Data Set for 2017. The files include hospital records for inpatient, outpatient and emergency department patient discharges. For my research purpose, I only use inpatient data set. These are limited use/de-identified data sets containing a set of fields common in discharge data files, such as codes for hospitals, diagnosis and procedures, age group, sex, hospital service area, and non-professional charges. The files are formatted as comma delimited text files. Included with the data is an Excel spreadsheet representing a data dictionary providing descriptions and explanations about the fields contained in the data as well as supplementary files that provide a list of ICD-10-CM diagnosis and CPT procedure codes.
+
+I choose inpatient data set for the research purpose, which contain 53686 rows and 79 columns. For the simplicity, I choose only 14 columns which are more interesting for the analysis. 
+
+Below are the questions I will try to answer using some data analysis techniques. 
+
+1. What is the highest and lowest cost DRG (Diagnostic Related Group)?
+2. What procedure is performed the most (inpatient or outpatient)?
+3. What is the average hospital stay (in days) for inpatients?
+4. What is the most common primary diagnosis?
+5. What is the main principal payment source to pay the medical expenses?
+
+
+##Data Preprocessing and Cleaning
+
+First, I Loaded the Inpatient data set and check if there are any missing values such as NAs, and empty cells. For simplicity, I converted the original text file into csv format. 
+
+Loading the data set
+```{r }
+mydata_Inpat=read.csv("/Users/chiranjibighimire/Desktop/Spring\ 2019_Courses/IT\ 599/Research\ Project/Assignment\ Files/Inpatient\ Data.csv")
+```
+
+This data set contain 53686 rows and 79 columns.
+
+Check the dimension of the data and display few rows and columns of the data.
+
+```{r}
+dim(mydata_Inpat)
+```
+
+Since there are so many columns, I decided to select only 14 interesting columns. 
+
+```{r}
+newdata_Inpat <- mydata_Inpat[c(1,2,4,6,8,9,10,30,54,55,56,61,76,77)]
+head(newdata_Inpat, n=5)
+```
+
+The data contains so many blank cells and NAs. I tried to fix those missing values, but I was not successful. Initially, I wanted to fill up the empty cells by NAs and then replace those NAs by 0. I was able to fill up empty cells by NAs using excel, but when I load the data it display <NA>. The R program could not able to recognize <NA> as a NA. When I try to replace all the NAs, it gives an error as shown in figure below. I spent plenty of time but I couldn't able to fix it. Finally, I decided to remove all the rows with NA and <NA>, which redued the rows from 53686 to 23960. 
+    
+```{r}
+cleaned_data<- na.omit(newdata_Inpat)
+dim(cleaned_data)
+head(cleaned_data, n=5)
+```
+
+Now, I got claned data without any missing values and empty cells.
+
+
+##Data Visualization
+
+I am using ggplot package to visualize the data. I will need to split the data to create a decision tree, so I also installed plyr package.  
+
+```{r}
+installed.packages("ggplot2")
+library("ggplot2")
+installed.packages('plyr')
+library(plyr)
+installed.packages("gridExtra")
+library(gridExtra)
+```
+
+First, I want to visualize the data to get the basic idea of metadata.
+
+```{r}
+p1=ggplot(data = cleaned_data, mapping = aes(x = DRG, y = CHRGS)) + geom_point(alpha = 0.1, aes(color = intage))  + ggtitle("DRG Vs Charges Plot Based on Age")
+
+p2=ggplot(data = cleaned_data, mapping = aes(x = DRG, y = CHRGS)) + geom_point(alpha = 0.1, aes(color = sex))  + ggtitle("DRG Vs Charges Plot Based on Sex")
+
+p3=ggplot(data = cleaned_data, mapping = aes(x = DRG, y = pdays)) + geom_point(alpha = 0.1, aes(color = intage))  + ggtitle("DRG Vs pdays Plot Based on Age")
+
+p4=ggplot(data = cleaned_data, mapping = aes(x = DRG, y = pdays)) + geom_point(alpha = 0.1, aes(color = sex))  + ggtitle("DRG Vs pdays Plot Based on Sex")
+
+grid.arrange(p1,p2,p3,p4, ncol = 2, top = "Visualization of the Inpatient Data Set")
+```
+Fig 1: This plot describes that the DRG cost is high for age group less than 5 (30-34 years) and most of them are male. The patient, with most common DRG, stays longer (more than 100 days) in hospital with age group below 30-34 years and they are mostly male.   
+
+Also, the Age group and Sex for the inpatient data set is shown in below barplots.
+
+```{r}
+barplot(table(cleaned_data$intage),col="red",ylab="Counts",las=2,main="Age Group of Inpatient",cex.names = 0.8,cex.axis = 0.8)
+```
+Fig 2: The barplot shows that age group of 14 (Age of 75 or older) has majority in the inpatient data: there are more older people in the inpatient data set.
+
+```{r}
+barplot(table(cleaned_data$sex),col="red",ylab="Counts",las=2,main=" Sex of Inpatient",cex.names = 0.8,cex.axis = 0.8)+ geom_point(alpha = 0.1, aes(color = sex))
+```
+Fig 3: This barplot illustrates that there are more female patient than  male in the inpatient data set.
+
+Now, I would like to answer some research questions that I mentioned above. 
+
+#1. What is the highest and lowest cost DRG (Diagnostic Related Group)?
+
+let's first plot the bar plot of charges Vs DRG (Diagnostic Related Group).
+
+```{r}
+plot1= ggplot(cleaned_data, aes(x =cleaned_data$DRG, y = cleaned_data$CHRGS))+ geom_bar(aes(fill = cleaned_data$CHRGS), stat = "identity" , color = "black", position = position_dodge(0.9))
+
+plot1 + ggtitle("Plot of Charges by Diagnosis Related Group (DRG)") + xlab("DRG") + ylab("Charges Amount (dollar)")
+```
+Fig 4: The above plot shows the Diagnostic Related Group (DRG) Vs charges amount (cost) of the patient in the hospital. 
+
+It looks like there is one high peak after DRG 750, but couldn't tell what is the exact high cost DRG and lowest cost DRG.
+So, I need to find maximum and minimum DRG value associated with Charges.
+
+First, let's calculte minimum and maximum charges (cost) amount.
+
+```{r}
+max(cleaned_data$CHRGS, na.rm=TRUE)
+min(cleaned_data$CHRGS, na.rm = TRUE)
+```
+
+The highest cost of inpatuent is 1332080 and lowest cost is 1272.35. 
+
+Now, let's calculate highest and lowest cost DRG.
+
+```{r}
+cleaned_data[which.max(cleaned_data[,6]),13]
+cleaned_data[which.min(cleaned_data[,6]),13]
+```
+
+The highest cost DRG is 790: the DRG called "extreme immaturity or respiratory distress syndrome" cost more than other DRG. On the other hand, the lowest cost DRG is 795: the DRG called "Normal newborn" cost less than other DRG.   
+
+#2. What procedure is performed the most (inpatient or outpatient)?
+
+Let's make a barplot of primary procedure to see how it looks like. 
+
+```{r}
+barplot(prop.table(table(cleaned_data$PX1)))
+```
+Fig 5: In the above barplot, there is a one high peak, but we need to calculate the frequency to know the most performed procedure.  
+
+```{r}
+sort(table(cleaned_data$PX1),decreasing=TRUE)[1]
+```
+
+The primary procedure (PX1) code 10E0XZZ performed the most with frequency of 3255. The primary procedure called "Delivery of Products of Conception" performed the most in inpatient which is done by External Approach. This procedure is intended for females as it is clinically and virtually impossible to be applicable to a male.
+
+#3. What is the average hospital stay in days for inpatients?
+
+In order to know the average hospital stay, we need to calculate mean (average) of the stay in days.  
+
+```{r}
+result.mean <- mean(cleaned_data$pdays)
+print(result.mean)
+```
+The average stay for inpatients is 4.99 days, which is almost 5 days. 
+
+#4. What is the most common primary diagnosis?
+
+```{r}
+sort(table(cleaned_data$DX1),decreasing=TRUE)[1]
+```
+
+The most frequent primary diagnostic is Z3800 with frequency of 1237. The primary diagnosis Z3800 is a Single liveborn infant, delivered vaginally. The product of a livebirth; an infant who shows evidence of life after birth; life is considered to be present after birth if any one of the following is observed: 1) the infant breathes; 2) the infant shows beating of the heart; 3) pulsation of the umbilical cord occurs; or 4) definite movement of voluntary muscles occurs.
+
+#5. What is the main principle payment source  to pay the medical expenses?
+
+In order to get an idea of main principle payment source of inpatient, let's plot a histogram of principal payment source (PPAY).
+
+```{r}
+ggplot(cleaned_data) + geom_histogram(aes(x = PPAY))
+```
+Fig 6: The histogram shows that the payment source 1 has a highest frequency. let's calculate exact frequency of that PPAY. 
+
+```{r}
+sort(table(cleaned_data$PPAY),decreasing=TRUE)[1]
+```
+
+Form the calculation, the principal payment source (PPAY) 1 is the most common payment source with a frequency of 8395. That means medicare is the most common payment source for inpatient: most of the inpatient's medical bill is covered by Medicare. 
+
+
+Decision Tree
+
+I would like to split the data and to make a decision tree. Let's split the data with 80 % of training set and 20 % of testing (validate) data set.  
+
+```{r}
+library(rpart.plot)
+library(rpart)
+
+set.seed(1234)
+TrainingDataIndex= sample(2,nrow(cleaned_data), replace=TRUE, prob =c(0.8,0.2))
+train_1 = cleaned_data[TrainingDataIndex==1,]
+validate= cleaned_data[TrainingDataIndex==2,]
+nrow(train_1)
+nrow(validate)
+```
+
+I got training data with 19140 roes and testing data with 4820 rows.
+
+Let's create a Decision Tree using rpart. I would like to use DX1 variable as a response variable.
+
+```{r}
+tree1 =rpart(DX1~intage+sex+pdays+CHRGS, data=train_1)
+rpart.plot(tree1, extra=8)
+```
+Fig 7:The decision tree looks like thee are lots of unused DX1.(Interprete the tree)
+
+Lastly, I would like to make another decision tree. The variable pdays is used as a response variable.
+
+```{r}
+tree2 =rpart(pdays~ sex+intage+CHRGS+DRG, train_1)
+rpart.plot(tree2)
+```
+Fig 8:(Intrepretation the decision tree) 
+
+
+## Conclusion
+
+
+The DRG Aftercare with CC/MCC (949) patient discharge after 441 days of admission: which represents a patient that requires more resources; therefore, hospitals are paid more to care. The DRG 775 patient discharged on date of admission or on day after admission. 
+
