@@ -20,7 +20,11 @@ Below are the questions I will try to answer using EDA.
 Metadata of the data
 
 ![alt text](https://github.com/cghimire/Healthcare-Data-Analytics/blob/master/metadata.png "Metadata of the data")
-*Histogram of Current Employee*
-  
-![Alt Text](https://github.com/cghimire/Employee-Attrition-Problem/blob/master/df_nonexisting_histogram_plots.png " ex-employee Histogram")
-*Histogram of ex-employee*
+* The inpatient data set contain 53686 rows and 79 columns. For the simplicity, I choose only 14 columns which are more interesting for the
+analysis.*
+
+![alt text](https://github.com/cghimire/Healthcare-Data-Analytics/blob/master/Age_group.png "Age Group of Inpatient")
+
+![alt text](https://github.com/cghimire/Healthcare-Data-Analytics/blob/master/Sex_Inpatient.png "Gender based Histogram for Inpatient")
+
+## Exploratory Data Analysis
