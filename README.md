@@ -28,3 +28,7 @@ analysis.*
 ![alt text](https://github.com/cghimire/Healthcare-Data-Analytics/blob/master/Sex_Inpatient.png "Gender based Histogram for Inpatient")
 
 ## Exploratory Data Analysis
+
+![alt text](https://github.com/cghimire/Healthcare-Data-Analytics/blob/master/DRG_charges.png "DRG Vs Charges")
+
+![alt text](https://github.com/cghimire/Healthcare-Data-Analytics/blob/master/Decision%20Tree.png "Decision tree")
