@@ -3,7 +3,7 @@
 ## Table of Content
   * [Overview](#overview)
   * [Data Preparation and Exploration](#data-preparation-and-exploration)
-  * [Exploratory Data Analysis](#EDA)
+  * [Exploratory Data Analysis](#exploratory-data-analysis)
   * [Conclusion](#conclusion)
 
 ## Overview
@@ -32,3 +32,7 @@ analysis.*
 ![alt text](https://github.com/cghimire/Healthcare-Data-Analytics/blob/master/DRG_charges.png "DRG Vs Charges")
 
 ![alt text](https://github.com/cghimire/Healthcare-Data-Analytics/blob/master/Decision%20Tree.png "Decision tree")
+
+## Conclusion
+
+
