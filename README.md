@@ -57,5 +57,4 @@ common	principal payment	source	for	a	patient	who	stays	in	a	hospital	while	unde
 * The	average	length	of	stay	in the hospital	is	about	5	days and	the	patient	need to	stay	longer up	to 441 days based	on	the	nature	of	the	diagnosis.
 * The	patient, belongs	to	DRG ‘After care	with	CC/MCC’, discharged after 441	days	of	admission:	which	means a	patient requires	more	resources; therefore, hospitals	are	paid	more	to	care.	
 
-The	patient,	who	belongs	to DRG	called	‘Vaginal	delivery	w/o	complicating	diagnosis’, discharged	on	date	of	admission	or	on	day	after	admission, which	makes	
-perfectly sense.
+The patient belongs to DRG ‘Vaginal delivery w/o complicating diagnosis’ discharged on admission day or the day after admission, which makes perfect sense.
