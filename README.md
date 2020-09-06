@@ -20,12 +20,15 @@ Below are the questions I will try to answer using EDA.
 Metadata of the data
 
 ![alt text](https://github.com/cghimire/Healthcare-Data-Analytics/blob/master/metadata.png "Metadata of the data")
-* The inpatient data set contain 53686 rows and 79 columns. For the simplicity, I choose only 14 columns which are more interesting for the
-analysis.*
+*The inpatient data set contain 53686 rows and 79 columns. For the simplicity, I choose only 14 columns which are more interesting for the
+analysis*.
 
 ![alt text](https://github.com/cghimire/Healthcare-Data-Analytics/blob/master/Age_group.png "Age Group of Inpatient")
+*The bar plot shows that age group of	14 (Age	of	75	or	older) has	majority in the inpatient	data:	there	are	more	older	people stay	in	the	hospital	while	under	treatment*.
 
 ![alt text](https://github.com/cghimire/Healthcare-Data-Analytics/blob/master/Sex_Inpatient.png "Gender based Histogram for Inpatient")
+*This	bar	plot illustrates that	there	is more	female	patient	than	male	in	the	inpatient	
+data	set*.
 
 ## Exploratory Data Analysis
 
