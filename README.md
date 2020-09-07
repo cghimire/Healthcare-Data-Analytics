@@ -47,7 +47,7 @@ common	principal payment	source	for	a	patient	who	stays	in	a	hospital	while	unde
 
 ![alt text](https://github.com/cghimire/Healthcare-Data-Analytics/blob/master/Decision%20Tree.png "Decision tree")
 
-*The	decision	tree	demonstrates	the predictive	chart	of length	of	stay	of	the	patients	with	probabilities and	percentage	of patient	in	the	leaf. For	example,	if	the	total	cost	is	less	than	227e+3	(227000),	the	patient	is	more	likely	to stay	almost	5	days. On	the	other	hand, if	the	charge	is	greater than	227000,	the	patientis	more likely	to	stay	55	days and	so	on*.
+*The	decision	tree	demonstrates	the length	of	stay	for the	patients	with	probabilities and	percentage. For	example,	if	the	total	cost	is	less	than	227e+3	(227000),	the	patient	is	more	likely	to stay	almost	5	days. On	the	other	hand, if	the	charge	is	greater than	227000,	the	patientis	more likely	to	stay	55	days and	so	on*.
 
 ## Conclusion
 * The patients, who	stays	in	a	hospital	while	under	treatment, are	mostly	older (over	75	years	old) and are	more female	in	comparison to	male.	
